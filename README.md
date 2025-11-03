@@ -37,6 +37,17 @@ cp .env.example .env.local
 pnpm dev
 ```
 
+#### AI Provider Options
+
+**Option 1: LM Studio (Recommended for Privacy & No Cost)**
+- 100% local, no API keys needed
+- Recommended model: **Qwen3 Coder 30B**
+- [📖 LM Studio Setup Guide](docs/LMSTUDIO.md)
+
+**Option 2: Cloud Providers**
+- Add API keys to `.env.local` for providers like OpenAI, Anthropic, etc.
+- See `.env.example` for all supported providers
+
 ### Usage
 
 1. **Import any project folder** via the UI
@@ -52,6 +63,12 @@ pnpm dev
 - Smart Next.js version management
 - Tailwind v3/v4 detection and configuration
 - CSS syntax validation and repair
+
+**LM Studio Integration**
+- Native LM Studio support in provider dropdown
+- Auto-discovers all loaded models from local LM Studio instance
+- Seamless switching between local and cloud AI providers
+- Real-time model availability detection
 
 **Enhanced Preview Support**
 - WebGL/WebGPU/Three.js iframe permissions
