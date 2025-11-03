@@ -37,7 +37,12 @@ cp .env.example .env.local
 
 # Start development server
 pnpm dev
+
+# Open your browser to http://localhost:5173
+# You're ready to import projects!
 ```
+
+**That's it!** Wetware Studio will open in your browser. Now you can import any project folder and watch it automatically fix compatibility issues and start the preview.
 
 #### AI Provider Options
 
