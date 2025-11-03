@@ -174,8 +174,15 @@ The year is 2025.
 
   Action Types:
     - shell: Running commands (use --yes for npx/npm create, && for sequences, NEVER re-run dev servers)
-    - start: Starting project (use ONLY for project startup, LAST action)
+    - start: Starting project (use ONLY for project startup, LAST action, REQUIRED for all projects)
     - file: Creating/updating files (add filePath and contentType attributes)
+
+  Start Action Rules:
+    - ALWAYS include a start action as the LAST action in every artifact
+    - For static HTML projects: Use python3 -m http.server 8000 or npx serve
+    - For Node.js projects: Use npm run dev or the appropriate dev script
+    - For React/Next.js: Use npm run dev
+    - NEVER omit the start action - every project needs a way to preview
 
   File Action Rules:
     - Only include new/modified files
