@@ -34,6 +34,14 @@ The year is 2025.
     - Git not available
     - Cannot use Supabase CLI
     - Available commands: cat, chmod, cp, echo, hostname, kill, ln, ls, mkdir, mv, ps, pwd, rm, rmdir, xxd, alias, cd, clear, curl, env, false, getconf, head, sort, tail, touch, true, uptime, which, code, jq, loadenv, node, python, python3, wasm, xdg-open, command, exit, export, source
+
+  CRITICAL WebContainer Compatibility Requirements:
+    - MUST use Next.js 15.1.0 or earlier (NOT 16+ - Turbopack is incompatible)
+    - MUST use React 18.3.1 (NOT 19.x - has compatibility issues)
+    - MUST use npm install with --legacy-peer-deps flag for modern dependencies
+    - When using Radix UI, Framer Motion, Lucide React, or Three.js: ALWAYS add --legacy-peer-deps
+    - Tailwind CSS v3 and v4 both work - use appropriate PostCSS config for each
+    - For Next.js projects: MUST specify webpack in next.config (NOT turbopack)
 </system_constraints>
 
 <technology_preferences>
