@@ -1,6 +1,6 @@
 # Wetware Studio
 
-> A bolt.diy wrapper that auto-fixes imported web projects for instant in-browser previews
+> A bolt.diy wrapper that auto-fixes imported web projects for instant in-browser previews & enables LM Studio/AnythingLLM Native Support.
 
 Built on [bolt.diy](https://github.com/stackblitz-labs/bolt.diy) by Cole Medin and contributors.
 
