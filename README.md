@@ -25,7 +25,7 @@ Import any Next.js, React, or modern web project and get instant working preview
 
 ```bash
 # Clone and install
-git clone https://github.com/yourusername/wetware-studio.git
+git clone https://github.com/myrmtoliodebroudon/wetware-studio.git
 cd wetware-studio
 pnpm install
 
