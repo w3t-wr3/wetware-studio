@@ -25,24 +25,77 @@ Import any Next.js, React, or modern web project and get instant working preview
 
 ### Quick Start
 
+#### Step 1: Clone the Repository
+
 ```bash
-# Clone and install
 git clone https://github.com/myrmtoliodebroudon/wetware-studio.git
 cd wetware-studio
-pnpm install
-
-# Configure environment
-cp .env.example .env.local
-# Add your AI provider API keys to .env.local
-
-# Start development server
-pnpm dev
-
-# Open your browser to http://localhost:5173
-# You're ready to import projects!
 ```
 
-**That's it!** Wetware Studio will open in your browser. Now you can import any project folder and watch it automatically fix compatibility issues and start the preview.
+#### Step 2: Install Dependencies
+
+**Important:** This project uses `pnpm`. If you don't have it installed:
+
+```bash
+# Install pnpm globally
+npm install -g pnpm
+
+# Then install project dependencies
+pnpm install
+```
+
+#### Step 3: Configure Environment
+
+```bash
+# Copy the example environment file
+cp .env.example .env.local
+```
+
+**Edit `.env.local` and add your AI provider settings:**
+
+For local AI (no API keys needed):
+```bash
+# AnythingLLM (recommended)
+ANYTHINGLLM_API_BASE_URL=http://localhost:3001
+
+# OR LM Studio
+LMSTUDIO_API_BASE_URL=http://localhost:1234
+```
+
+For cloud providers (add API keys):
+```bash
+OPENAI_API_KEY=sk-...
+# OR
+ANTHROPIC_API_KEY=sk-ant-...
+# See .env.example for all options
+```
+
+#### Step 4: Start the Development Server
+
+```bash
+pnpm dev
+```
+
+Wait for the server to start. You'll see:
+```
+  ➜  Local:   http://localhost:5173/
+```
+
+#### Step 5: Open in Browser
+
+Open **http://localhost:5173** in your browser.
+
+#### Step 6: Start Using Wetware Studio!
+
+1. **Click "Import Folder"** button
+2. **Select any project folder** (Next.js, React, etc.)
+3. **Watch the magic happen:**
+   - Auto-fixes are applied
+   - Dependencies install automatically
+   - Dev server starts automatically
+   - Preview appears instantly! ✨
+
+**That's it!** Your project is now running with all compatibility issues automatically fixed.
 
 #### AI Provider Options
 
