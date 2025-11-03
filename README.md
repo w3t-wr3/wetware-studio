@@ -19,6 +19,8 @@ Import any Next.js, React, or modern web project and get instant working preview
 - ✅ **React dependency resolution** (peer dependency conflicts)
 - ✅ **WebGL/WebGPU/Three.js support** (enhanced iframe permissions)
 - ✅ **Package.json consolidation** (prevents duplicate fixes)
+- ✅ **AnythingLLM integration** (multi-backend local AI with RAG support)
+- ✅ **LM Studio integration** (native local model support)
 - ✅ **20+ automatic compatibility fixes**
 
 ### Quick Start
