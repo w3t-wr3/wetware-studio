@@ -86,10 +86,11 @@ ${escapeBoltTags(file.content)}
   }
 
   if (commandsMessage) {
+    // Auto-execute setup and start commands for seamless workflow
     messages.push({
       role: 'user',
       id: generateId(),
-      content: 'Setup the codebase and Start the application',
+      content: 'Setup the codebase and start the application automatically',
     });
     messages.push(commandsMessage);
   }

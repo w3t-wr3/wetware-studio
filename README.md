@@ -39,12 +39,18 @@ pnpm dev
 
 #### AI Provider Options
 
-**Option 1: LM Studio (Recommended for Privacy & No Cost)**
+**Option 1: AnythingLLM (Recommended - Most Flexible)**
+- 100% local with multi-model support
+- Works with Ollama, LM Studio, or cloud providers
+- Built-in document RAG and workspace management
+- [📖 AnythingLLM Setup Guide](docs/ANYTHINGLLM.md)
+
+**Option 2: LM Studio (Recommended for Privacy & No Cost)**
 - 100% local, no API keys needed
 - Recommended model: **Qwen3 Coder 30B**
 - [📖 LM Studio Setup Guide](docs/LMSTUDIO.md)
 
-**Option 2: Cloud Providers**
+**Option 3: Cloud Providers**
 - Add API keys to `.env.local` for providers like OpenAI, Anthropic, etc.
 - See `.env.example` for all supported providers
 
@@ -64,11 +70,13 @@ pnpm dev
 - Tailwind v3/v4 detection and configuration
 - CSS syntax validation and repair
 
-**LM Studio Integration**
-- Native LM Studio support in provider dropdown
-- Auto-discovers all loaded models from local LM Studio instance
+**Local AI Integration**
+- Native support for **AnythingLLM** and **LM Studio**
+- Auto-discovers all loaded models from local instances
 - Seamless switching between local and cloud AI providers
 - Real-time model availability detection
+- AnythingLLM: Multi-backend support (Ollama, LM Studio, cloud)
+- LM Studio: Direct model loading and inference
 
 **Enhanced Preview Support**
 - WebGL/WebGPU/Three.js iframe permissions
