@@ -40,21 +40,35 @@ export async function selectContext(props: {
 }) {
   const { messages, env: serverEnv, apiKeys, files, providerSettings, summary, onFinish } = props;
 
-  // For static HTML projects, skip LLM selection and return all files
+  // For static HTML projects, only include HTML/CSS for context (not libraries)
   if (isStaticHtmlProject(files)) {
-    logger.info('Static HTML project detected - bypassing LLM file selection');
+    logger.info('Static HTML project detected - returning only HTML/CSS for context');
     let filePaths = getFilePaths(files || {});
     const filteredFiles: FileMap = {};
 
+    // Only include HTML, CSS, and custom JS (not libraries)
     filePaths.forEach((path) => {
       let relativePath = path;
       if (path.startsWith('/home/project/')) {
         relativePath = path.replace('/home/project/', '');
       }
-      filteredFiles[relativePath] = files[path];
+
+      // Skip libraries, fonts, and node_modules to avoid context overflow
+      if (relativePath.includes('/libraries/') ||
+          relativePath.includes('/fonts/') ||
+          relativePath.includes('node_modules/')) {
+        return;
+      }
+
+      // Include HTML, CSS, custom JS, and config files
+      if (relativePath.match(/\.(html|css|scss|less)$/i) ||
+          (relativePath.match(/\.js$/i) && relativePath.startsWith('js/')) ||
+          relativePath.match(/\.(json|md)$/i)) {
+        filteredFiles[relativePath] = files[path];
+      }
     });
 
-    logger.info(`Returning all ${Object.keys(filteredFiles).length} files for static HTML project`);
+    logger.info(`Returning ${Object.keys(filteredFiles).length} files for static HTML context (excluded libraries/fonts)`);
     return filteredFiles;
   }
   let currentModel = DEFAULT_MODEL;
