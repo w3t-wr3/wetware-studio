@@ -85,6 +85,7 @@ export default function GitCloneButton({ importChat, className }: GitCloneButton
 
         if (isStaticHtml) {
           console.log('Static HTML project detected - bypassing file size limits');
+          console.log(`Total files to process: ${filePaths.length}`);
         }
 
         let totalSize = 0;
@@ -92,37 +93,37 @@ export default function GitCloneButton({ importChat, className }: GitCloneButton
         const fileContents = [];
 
         for (const filePath of filePaths) {
-          const { data: content, encoding } = data[filePath];
-
-          // Skip binary files (but include images for static HTML projects)
-          const isImageFile = filePath.match(/\.(png|jpg|jpeg|gif|webp|ico|svg)$/i);
-          if (
-            content instanceof Uint8Array &&
-            !isImageFile &&
-            !filePath.match(/\.(txt|md|astro|mjs|js|jsx|ts|tsx|json|html|css|scss|less|yml|yaml|xml|vue|svelte)$/i)
-          ) {
-            skippedFiles.push(filePath);
-            continue;
-          }
-
-          // For static HTML projects, include image files as base64
-          if (isStaticHtml && isImageFile && content instanceof Uint8Array) {
-            // Convert binary to base64 for transmission (avoid stack overflow with large files)
-            let binaryString = '';
-            for (let i = 0; i < content.length; i++) {
-              binaryString += String.fromCharCode(content[i]);
-            }
-            const base64Content = btoa(binaryString);
-            totalSize += content.length;
-            fileContents.push({
-              path: filePath,
-              content: base64Content,
-              isBinary: true,
-            });
-            continue;
-          }
-
           try {
+            const { data: content, encoding } = data[filePath];
+
+            // Skip binary files (but include images for static HTML projects)
+            const isImageFile = filePath.match(/\.(png|jpg|jpeg|gif|webp|ico|svg)$/i);
+            if (
+              content instanceof Uint8Array &&
+              !isImageFile &&
+              !filePath.match(/\.(txt|md|astro|mjs|js|jsx|ts|tsx|json|html|css|scss|less|yml|yaml|xml|vue|svelte)$/i)
+            ) {
+              skippedFiles.push(filePath);
+              continue;
+            }
+
+            // For static HTML projects, include image files as base64
+            if (isStaticHtml && isImageFile && content instanceof Uint8Array) {
+              // Convert binary to base64 for transmission (avoid stack overflow with large files)
+              let binaryString = '';
+              for (let i = 0; i < content.length; i++) {
+                binaryString += String.fromCharCode(content[i]);
+              }
+              const base64Content = btoa(binaryString);
+              totalSize += content.length;
+              fileContents.push({
+                path: filePath,
+                content: base64Content,
+                isBinary: true,
+              });
+              console.log(`Processed image: ${filePath} (${content.length} bytes)`);
+              continue;
+            }
             const textContent =
               encoding === 'utf8' ? content : content instanceof Uint8Array ? textDecoder.decode(content) : '';
 
