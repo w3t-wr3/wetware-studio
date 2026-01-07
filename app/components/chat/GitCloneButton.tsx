@@ -94,12 +94,27 @@ export default function GitCloneButton({ importChat, className }: GitCloneButton
         for (const filePath of filePaths) {
           const { data: content, encoding } = data[filePath];
 
-          // Skip binary files
+          // Skip binary files (but include images for static HTML projects)
+          const isImageFile = filePath.match(/\.(png|jpg|jpeg|gif|webp|ico|svg)$/i);
           if (
             content instanceof Uint8Array &&
-            !filePath.match(/\.(txt|md|astro|mjs|js|jsx|ts|tsx|json|html|css|scss|less|yml|yaml|xml|svg|vue|svelte)$/i)
+            !isImageFile &&
+            !filePath.match(/\.(txt|md|astro|mjs|js|jsx|ts|tsx|json|html|css|scss|less|yml|yaml|xml|vue|svelte)$/i)
           ) {
             skippedFiles.push(filePath);
+            continue;
+          }
+
+          // For static HTML projects, include image files as base64
+          if (isStaticHtml && isImageFile && content instanceof Uint8Array) {
+            // Convert binary to base64 for transmission
+            const base64Content = btoa(String.fromCharCode(...Array.from(content)));
+            totalSize += content.length;
+            fileContents.push({
+              path: filePath,
+              content: base64Content,
+              isBinary: true,
+            });
             continue;
           }
 
@@ -151,8 +166,12 @@ ${skippedFiles.map((f) => `- ${f}`).join('\n')}`
 <boltArtifact id="imported-files" title="Git Cloned Files" type="bundled">
 ${fileContents
   .map(
-    (file) =>
-      `<boltAction type="file" filePath="${file.path}">
+    (file: any) =>
+      file.isBinary
+        ? `<boltAction type="file" filePath="${file.path}" encoding="base64">
+${file.content}
+</boltAction>`
+        : `<boltAction type="file" filePath="${file.path}">
 ${escapeBoltTags(file.content)}
 </boltAction>`,
   )
