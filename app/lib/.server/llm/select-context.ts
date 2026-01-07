@@ -12,6 +12,21 @@ import { LLMManager } from '~/lib/modules/llm/manager';
 const ig = ignore().add(IGNORE_PATTERNS);
 const logger = createScopedLogger('select-context');
 
+/**
+ * Detects if the project is a static HTML site
+ * by checking for index.html and presence of libraries/css/js folders
+ */
+function isStaticHtmlProject(files: FileMap): boolean {
+  const filePaths = Object.keys(files);
+  const hasIndexHtml = filePaths.some(path => path.includes('index.html'));
+  const hasLibraries = filePaths.some(path => path.includes('/libraries/'));
+  const hasCss = filePaths.some(path => path.includes('/css/') || path.endsWith('.css'));
+  const hasJs = filePaths.some(path => path.includes('/js/') || path.endsWith('.js'));
+
+  // If we have index.html and traditional folder structure, it's likely static HTML
+  return hasIndexHtml && (hasLibraries || (hasCss && hasJs));
+}
+
 export async function selectContext(props: {
   messages: Message[];
   env?: Env;
@@ -24,6 +39,24 @@ export async function selectContext(props: {
   onFinish?: (resp: GenerateTextResult<Record<string, CoreTool<any, any>>, never>) => void;
 }) {
   const { messages, env: serverEnv, apiKeys, files, providerSettings, summary, onFinish } = props;
+
+  // For static HTML projects, skip LLM selection and return all files
+  if (isStaticHtmlProject(files)) {
+    logger.info('Static HTML project detected - bypassing LLM file selection');
+    let filePaths = getFilePaths(files || {});
+    const filteredFiles: FileMap = {};
+
+    filePaths.forEach((path) => {
+      let relativePath = path;
+      if (path.startsWith('/home/project/')) {
+        relativePath = path.replace('/home/project/', '');
+      }
+      filteredFiles[relativePath] = files[path];
+    });
+
+    logger.info(`Returning all ${Object.keys(filteredFiles).length} files for static HTML project`);
+    return filteredFiles;
+  }
   let currentModel = DEFAULT_MODEL;
   let currentProvider = DEFAULT_PROVIDER.name;
   const processedMessages = messages.map((message) => {

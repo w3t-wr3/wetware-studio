@@ -42,6 +42,17 @@ const ig = ignore().add(IGNORE_PATTERNS);
 const MAX_FILE_SIZE = 100 * 1024; // 100KB limit per file
 const MAX_TOTAL_SIZE = 500 * 1024; // 500KB total limit
 
+/**
+ * Detects if the project is a static HTML site
+ */
+function isStaticHtmlProject(filePaths: string[]): boolean {
+  const hasIndexHtml = filePaths.some(path => path.includes('index.html'));
+  const hasLibraries = filePaths.some(path => path.includes('/libraries/'));
+  const hasCss = filePaths.some(path => path.includes('/css/') || path.endsWith('.css'));
+  const hasJs = filePaths.some(path => path.includes('/js/') || path.endsWith('.js'));
+  return hasIndexHtml && (hasLibraries || (hasCss && hasJs));
+}
+
 interface GitCloneButtonProps {
   className?: string;
   importChat?: (description: string, messages: Message[], metadata?: IChatMetadata) => Promise<void>;
@@ -69,6 +80,13 @@ export default function GitCloneButton({ importChat, className }: GitCloneButton
         const filePaths = Object.keys(data).filter((filePath) => !ig.ignores(filePath));
         const textDecoder = new TextDecoder('utf-8');
 
+        // Detect if this is a static HTML project to bypass size limits
+        const isStaticHtml = isStaticHtmlProject(filePaths);
+
+        if (isStaticHtml) {
+          console.log('Static HTML project detected - bypassing file size limits');
+        }
+
         let totalSize = 0;
         const skippedFiles: string[] = [];
         const fileContents = [];
@@ -93,16 +111,16 @@ export default function GitCloneButton({ importChat, className }: GitCloneButton
               continue;
             }
 
-            // Check file size
+            // Check file size (skip for static HTML projects)
             const fileSize = new TextEncoder().encode(textContent).length;
 
-            if (fileSize > MAX_FILE_SIZE) {
+            if (!isStaticHtml && fileSize > MAX_FILE_SIZE) {
               skippedFiles.push(`${filePath} (too large: ${Math.round(fileSize / 1024)}KB)`);
               continue;
             }
 
-            // Check total size
-            if (totalSize + fileSize > MAX_TOTAL_SIZE) {
+            // Check total size (skip for static HTML projects)
+            if (!isStaticHtml && totalSize + fileSize > MAX_TOTAL_SIZE) {
               skippedFiles.push(`${filePath} (would exceed total size limit)`);
               continue;
             }
